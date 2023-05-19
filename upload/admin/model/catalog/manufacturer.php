@@ -26,6 +26,32 @@ class ModelCatalogManufacturer extends Model {
 			}
 		}
 		
+		// Pez globo
+		if (isset($data['facebook_url'])) {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_overload SET manufacturer_id = '" . (int)$manufacturer_id . "', facebook_url = '" . $this->db->escape($data['facebook_url']) . "'");
+		}
+
+		if (isset($data['instagram_url'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer_overload SET instagram_url = '" . $this->db->escape($data['instagram_url'])  . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		}
+
+		if (isset($data['tiktok_url'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer_overload SET tiktok_url = '" . $this->db->escape($data['tiktok_url'])  . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		}
+
+		if (isset($data['whatsapp_url'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer_overload SET whatsapp_url = '" . $this->db->escape($data['whatsapp_url'])  . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		}
+
+		if (isset($data['store_url'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer_overload SET store_url = '" . $this->db->escape($data['store_url'])  . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		}
+
+		if (isset($data['phone_number'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer_overload SET phone_number = '" . $this->db->escape($data['phone_number'])  . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		}
+
+		// end Pez globo
 		$this->cache->delete('manufacturer');
 
 		return $manufacturer_id;
@@ -59,6 +85,32 @@ class ModelCatalogManufacturer extends Model {
 		}
 
 		$this->cache->delete('manufacturer');
+
+		// Pez globo
+		if (isset($data['facebook_url'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer_overload SET facebook_url = '" . $this->db->escape($data['facebook_url'])  . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		}
+
+		if (isset($data['instagram_url'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer_overload SET instagram_url = '" . $this->db->escape($data['instagram_url'])  . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		}
+
+		if (isset($data['tiktok_url'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer_overload SET tiktok_url = '" . $this->db->escape($data['tiktok_url'])  . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		}
+
+		if (isset($data['whatsapp_url'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer_overload SET whatsapp_url = '" . $this->db->escape($data['whatsapp_url'])  . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		}
+
+		if (isset($data['store_url'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer_overload SET store_url = '" . $this->db->escape($data['store_url'])  . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		}
+
+		if (isset($data['phone_number'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer_overload SET phone_number = '" . $this->db->escape($data['phone_number'])  . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		}
+		// end Pez globo
 	}
 
 	public function deleteManufacturer($manufacturer_id) {
@@ -145,4 +197,50 @@ class ModelCatalogManufacturer extends Model {
 
 		return $query->row['total'];
 	}
+
+	// Pez globo
+	public function getManufacturerOverloadFacebookUrl($manufacturer_id) {
+		return $this->getManufacturerOverload($manufacturer_id)['facebook_url'];
+	}
+
+	public function getManufacturerOverloadInstagramUrl($manufacturer_id) {
+		return $this->getManufacturerOverload($manufacturer_id)['instagram_url'];
+	}
+
+	public function getManufacturerOverloadTiktokUrl($manufacturer_id) {
+		return $this->getManufacturerOverload($manufacturer_id)['tiktok_url'];
+	}
+	
+	public function getManufacturerOverloadWhatsappUrl($manufacturer_id) {
+		return $this->getManufacturerOverload($manufacturer_id)['whatsapp_url'];
+	}
+
+	public function getManufacturerOverloadStoreUrl($manufacturer_id) {
+		return $this->getManufacturerOverload($manufacturer_id)['store_url'];
+	}
+
+	public function getManufacturerOverloadPhoneNumber($manufacturer_id) {
+		return $this->getManufacturerOverload($manufacturer_id)['phone_number'];
+	}
+	
+	private function getManufacturerOverload ($manufacturer_id) {
+		if (empty($manufacturer_id)) {
+			return;
+		}
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "manufacturer_overload WHERE manufacturer_id = '" . $manufacturer_id ."'");
+		if (empty($query->rows[0])) {
+			return [
+				'facebook_url' => '',
+				'instagram_url' => '',
+				'tiktok_url' => '',
+				'whatsapp_url' => '',
+				'store_url' => '',
+				'phone_number' => ''
+			];
+		}
+
+		return $query->rows[0];
+	}
+
+	// end Pez globo
 }

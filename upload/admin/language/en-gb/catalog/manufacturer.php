@@ -31,3 +31,15 @@ $_['error_name']        = 'Manufacturer Name must be between 1 and 64 characters
 $_['error_keyword']     = 'SEO URL already in use!';
 $_['error_unique']      = 'SEO URL must be unique!';
 $_['error_product']     = 'Warning: This manufacturer cannot be deleted as it is currently assigned to %s products!';
+
+// Pez globo
+	
+$_['tab_overload']              = 'Sobrecarga';
+$_['entry_facebook_url']        = 'Facebook URL';
+$_['entry_instagram_url']       = 'Instagram URL';
+$_['entry_tiktok_url']          = 'Tiktok URL';
+$_['entry_whatsapp_url']        = 'Whatsapp URL';
+$_['entry_store_url']           = 'Store URL';
+$_['entry_phone_number']        = 'Teléfono';
+
+// end Pez globo	
