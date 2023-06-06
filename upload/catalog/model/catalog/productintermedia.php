@@ -259,8 +259,7 @@ class ModelCatalogProductIntermedia extends Model {
 	}
 
 	public function exists($data) {
-		$query = $this->db->query("SELECT p.product_id FROM " . DB_PREFIX . "product_intermedia p WHERE p.model = '" . $data['model'] . "' AND p.
-		manufacturer_id = '" . (int)$data['manufacturer_id'] . "'");
+		$query = $this->db->query("SELECT p.product_id FROM " . DB_PREFIX . "product_intermedia p WHERE p.model = '" . $data['model'] . "' AND p.manufacturer_id = '" . (int)$data['manufacturer_id'] . "'");
 		
 		if (empty($query->num_rows)) {
 			return false;
