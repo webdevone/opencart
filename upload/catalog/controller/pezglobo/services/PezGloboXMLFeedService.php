@@ -56,10 +56,16 @@ final class PezGloboXMLFeedService {
             $link = (string)$item->link;
             $quantity = (string)$item->children($namespace)->quantity;
             $weight = (string)$item->children($namespace)->weight;
+            $availability = (string)$item->children($namespace)->availability;
+            $images = [
+                'images' => [
+                    $imageLink
+                ]
+            ];
             $data[] = [
                 'model' => $title,
                 'price' => $price,
-                'image' => $imageLink,
+                'image' => json_encode($images),
                 'link' => $link,
                 'quantity' => $quantity,
                 'weight' => $weight,
