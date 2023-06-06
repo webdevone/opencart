@@ -49,7 +49,7 @@ final class PezGloboXMLFeedService {
     {
         $data = [];
         foreach ($lote as $item) {
-            $title = (string)$item->title;
+            $title = htmlspecialchars_decode((string)$item->title);
             $descripcion = (string)$item->description;
             $price = (float)$item->children($namespace)->price;
             $imageLink = (string)$item->children($namespace)->image_link;
