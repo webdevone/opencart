@@ -5,7 +5,7 @@ final class PezGloboProductIntermediaService
     public static function save($model, array $data)
     {
         $products = $model->exists([
-            'model' => $data['model'],
+            'model' => htmlspecialchars_decode($data['model']),
             'manufacturer_id' => $data['manufacturer_id']
         ]);
 
