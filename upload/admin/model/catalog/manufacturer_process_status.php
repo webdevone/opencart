@@ -21,4 +21,10 @@ class ModelCatalogManufacturerProcessStatus extends Model {
 
         return $query->row;
     }
+
+    public function getManufacturerProcessStatusByStatus($status) {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "manufacturer_process_status WHERE status = '" . (int)$status . "' LIMIT 1");
+    
+        return $query->row;
+    }
 }

@@ -7,12 +7,19 @@ class ControllerPezgloboFeedAggregator extends Controller {
 	public function index() {
 		// $this->load->language('product/manufacturer');
 		$this->load->model('catalog/manufacturer');
-		$feedUrl = $this->model_catalog_manufacturer->getManufacturerOverloadFeedUrl(12);
+		$this->load->model('catalog/manufacturer_process_status');
+		$manufacturer_process_status = $this->model_catalog_manufacturer_process_status->getManufacturerProcessStatusByStatus(PezGloboProcessStatus::IN_QUEUE);
+		if (empty($manufacturer_process_status)) {
+			$this->response->setOutput('there is no manufacturer in queue');
+			return;
+		}
+		
+		$feedUrl = $this->model_catalog_manufacturer->getManufacturerOverloadFeedUrl($manufacturer_process_status['manufacturer_id']);
 		echo $feedUrl . "<br>";
-		$feedIterator = new PezGloboXMLFeedService($feedUrl, 12, $this->registry);
+		$feedIterator = new PezGloboXMLFeedService($feedUrl, $manufacturer_process_status['manufacturer_id'], $this->registry);
 		$products = $feedIterator->batch();
 		// echo "<pre>";
-		// var_dump($products);
+		// var_dump($manufacturer_process_status);
 		// echo "</pre>";
 		
 		if (empty($products)) {
