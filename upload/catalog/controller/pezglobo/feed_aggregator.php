@@ -5,24 +5,28 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'services' . DIRECTORY_SEPARATOR . 
 
 class ControllerPezgloboFeedAggregator extends Controller {
 	public function index() {
-		$this->load->language('product/manufacturer');
+		// $this->load->language('product/manufacturer');
 		$this->load->model('catalog/manufacturer');
-		$this->load->model('catalog/productintermedia');
 		$feedUrl = $this->model_catalog_manufacturer->getManufacturerOverloadFeedUrl(12);
-		$feedIterator = new PezGloboXMLFeedService($feedUrl, 12);
+		echo $feedUrl . "<br>";
+		$feedIterator = new PezGloboXMLFeedService($feedUrl, 12, $this->registry);
 		$products = $feedIterator->batch();
-
+		// echo "<pre>";
+		// var_dump($products);
+		// echo "</pre>";
+		
 		if (empty($products)) {
 			$this->response->setOutput('there is no products');
 			return;
 		}
 		
+		$this->load->model('catalog/product_intermedia');
 		foreach ($products as $product) {
-			PezGloboProductIntermediaService::save($this->model_catalog_productintermedia, $product);
+			PezGloboProductIntermediaService::save($this->model_catalog_product_intermedia, $product);
 		}
 
 		// $this->response->setOutput($this->load->view('product/manufacturer_list', $data));
-		$this->response->setOutput('hola catalog no admin');
+		$this->response->setOutput('Done!');
 	}
 
 	public function info() {
