@@ -2,8 +2,9 @@
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'PezGloboLog.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'PezGloboGCategoryService.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'domain' . DIRECTORY_SEPARATOR .'PezGloboProcessStatus.php';
 
-final class PezGloboXMLFeedService {
+final class PezGloboXMLFeedService extends Model {
     private $batchSize = 10;
     private $language_id = 2;
     private $store_id = 0;
@@ -11,9 +12,9 @@ final class PezGloboXMLFeedService {
     private $logFile;
     private $manufacturer_id;
 
-
-    public function __construct($feedUrl, $manufacturer_id)
+    public function __construct($feedUrl, $manufacturer_id, $registry)
     {
+        $this->registry = $registry;
         $this->feedUrl = $feedUrl;
         $logFile = parse_url($feedUrl, PHP_URL_HOST);
         if (false !== $logFile) {
@@ -28,6 +29,7 @@ final class PezGloboXMLFeedService {
         $feed = simplexml_load_string($xml);
         $namespace = $feed->getDocNamespaces(true)['g'];
         $elementos = $feed->xpath('//channel/item');
+        echo count($elementos) . " elementos <br>";
         $batch_actual = PezGloboLog::read($this->logFile);
         if (empty($batch_actual)) {
             $batch_actual = 0;
@@ -37,10 +39,17 @@ final class PezGloboXMLFeedService {
         }
         $lote = array_slice($elementos, $offset, $this->batchSize);
         PezGloboLog::write($this->logFile, $batch_actual + 1);
+        $this->load->model('catalog/manufacturer_process_status');
+
         if (empty($lote)) {
             PezGloboLog::delete($this->logFile);
+            $this->model_catalog_manufacturer_process_status->editManufacturerProcessStatusByManufacturerId($this->manufacturer_id, PezGloboProcessStatus::FINISHED);
+            $log = new Log('pezglobo.log');
+            $log->write('Proceso finalizado de feed xml manu id : '. $this->manufacturer_id);
             return [];
         }
+        
+        $this->model_catalog_manufacturer_process_status->editManufacturerProcessStatusByManufacturerId($this->manufacturer_id, PezGloboProcessStatus::IN_PROGRESS);
 
         return $this->processBatch($lote, $namespace);
     }
