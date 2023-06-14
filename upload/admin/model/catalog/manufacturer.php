@@ -51,6 +51,8 @@ class ModelCatalogManufacturer extends Model {
 			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer_overload SET phone_number = '" . $this->db->escape($data['phone_number'])  . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 		}
 
+		$this->load->model('catalog/manufacturer_process_status');
+		$this->model_catalog_manufacturer_process_status->addManufacturerProcessStatus($manufacturer_id);
 		// end Pez globo
 		$this->cache->delete('manufacturer');
 
