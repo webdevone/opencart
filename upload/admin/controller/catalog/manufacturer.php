@@ -386,12 +386,7 @@ class ControllerCatalogManufacturer extends Controller {
 
 		// Pez globo
 		
-		$data =  $this->getManufacturerOverloadForm($data, 'facebook_url');
-		$data =  $this->getManufacturerOverloadForm($data, 'instagram_url');
-		$data =  $this->getManufacturerOverloadForm($data, 'tiktok_url');
-		$data =  $this->getManufacturerOverloadForm($data, 'whatsapp_url');
-		$data =  $this->getManufacturerOverloadForm($data, 'store_url');
-		$data =  $this->getManufacturerOverloadForm($data, 'phone_number');
+		$data =  $this->getManufacturerOverloadForm($data);
 
 		// end Pez globo
 
@@ -400,18 +395,11 @@ class ControllerCatalogManufacturer extends Controller {
 
 	// Pez globo
 
-	private function getManufacturerOverloadForm($data, $field_name) {
-		if (isset($this->request->post[$field_name])) {
-			$data[$field_name] = $this->request->post[$field_name];
-		} elseif (isset($this->request->get['manufacturer_id'])) {
-			$method = "getManufacturerOverload" . $this->convertToCamelCase($field_name);
-			// $log = new Log('manufacturer_overload.log');
-			if (method_exists(ModelCatalogManufacturer::class, $method)) {
-				$data[$field_name] = $this->model_catalog_manufacturer->$method($this->request->get['manufacturer_id']);
-			}
-		}
-		
-		return $data;
+	private function getManufacturerOverloadForm($data) {
+		return array_merge(
+			$data, 
+			$this->model_catalog_manufacturer->getManufacturerOverload($this->request->get['manufacturer_id'])
+		);
 	}
 
 	private function convertToCamelCase($str) {

@@ -51,6 +51,10 @@ class ModelCatalogManufacturer extends Model {
 			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer_overload SET phone_number = '" . $this->db->escape($data['phone_number'])  . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 		}
 
+		if (isset($data['feed_url'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer_overload SET feed_url = '" . $this->db->escape($data['feed_url'])  . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		}
+
 		$this->load->model('catalog/manufacturer_process_status');
 		$this->model_catalog_manufacturer_process_status->addManufacturerProcessStatus($manufacturer_id);
 		// end Pez globo
@@ -112,6 +116,10 @@ class ModelCatalogManufacturer extends Model {
 		if (isset($data['phone_number'])) {
 			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer_overload SET phone_number = '" . $this->db->escape($data['phone_number'])  . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 		}
+
+		if (isset($data['feed_url'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer_overload SET feed_url = '" . $this->db->escape($data['feed_url'])  . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		}
 		// end Pez globo
 	}
 
@@ -121,6 +129,11 @@ class ModelCatalogManufacturer extends Model {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "seo_url` WHERE query = 'manufacturer_id=" . (int)$manufacturer_id . "'");
 
 		$this->cache->delete('manufacturer');
+
+		// Pez globo
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "manufacturer_overload` WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "manufacturer_process_status` WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		// end Pez globo
 	}
 
 	public function getManufacturer($manufacturer_id) {
@@ -225,7 +238,7 @@ class ModelCatalogManufacturer extends Model {
 		return $this->getManufacturerOverload($manufacturer_id)['phone_number'];
 	}
 	
-	private function getManufacturerOverload ($manufacturer_id) {
+	public function getManufacturerOverload ($manufacturer_id) {
 		if (empty($manufacturer_id)) {
 			return;
 		}
@@ -237,7 +250,8 @@ class ModelCatalogManufacturer extends Model {
 				'tiktok_url' => '',
 				'whatsapp_url' => '',
 				'store_url' => '',
-				'phone_number' => ''
+				'phone_number' => '',
+				'feed_url' => ''
 			];
 		}
 

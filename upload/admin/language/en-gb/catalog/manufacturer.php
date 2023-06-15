@@ -40,6 +40,7 @@ $_['entry_instagram_url']       = 'Instagram URL';
 $_['entry_tiktok_url']          = 'Tiktok URL';
 $_['entry_whatsapp_url']        = 'Whatsapp URL';
 $_['entry_store_url']           = 'Store URL';
+$_['entry_feed_url']            = 'Feed URL';
 $_['entry_phone_number']        = 'Teléfono';
 
 // end Pez globo	
