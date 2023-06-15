@@ -11,6 +11,10 @@ class ControllerPezgloboFeedAggregator extends Controller {
 			$this->response->setOutput('there is no manufacturer in queue');
 			return;
 		}
+		$this->load->model('catalog/manufacturer');
+		$feedUrl = $this->model_catalog_manufacturer->getManufacturerOverloadFeedUrl(
+			$manufacturer_process_status['manufacturer_id']
+		);
 		
 		$feedUrl = $this->model_catalog_manufacturer->getManufacturerOverloadFeedUrl($manufacturer_process_status['manufacturer_id']);
 		echo $feedUrl . "<br>";
