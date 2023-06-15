@@ -6,9 +6,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'services' . DIRECTORY_SEPARATOR . 
 class ControllerPezgloboFeedAggregator extends Controller {
 	public function index() {
 		// $this->load->language('product/manufacturer');
-		$this->load->model('catalog/manufacturer');
-		$this->load->model('catalog/manufacturer_process_status');
-		$manufacturer_process_status = $this->model_catalog_manufacturer_process_status->getManufacturerProcessStatusByStatus(PezGloboProcessStatus::IN_QUEUE);
+		$manufacturer_process_status = $this->getManufacturerProcessStatus();
 		if (empty($manufacturer_process_status)) {
 			$this->response->setOutput('there is no manufacturer in queue');
 			return;
@@ -34,6 +32,17 @@ class ControllerPezgloboFeedAggregator extends Controller {
 
 		// $this->response->setOutput($this->load->view('product/manufacturer_list', $data));
 		$this->response->setOutput('Done!');
+	}
+
+	private function getManufacturerProcessStatus() {
+		$this->load->model('catalog/manufacturer_process_status');
+		$manufacturer_process_status = $this->model_catalog_manufacturer_process_status->getManufacturerProcessStatusByStatus(PezGloboProcessStatus::IN_PROGRESS);
+
+		if (empty($manufacturer_process_status)) {
+			return $this->model_catalog_manufacturer_process_status->getManufacturerProcessStatusByStatus(PezGloboProcessStatus::IN_QUEUE);
+		}
+
+		return $manufacturer_process_status;
 	}
 
 	public function info() {
