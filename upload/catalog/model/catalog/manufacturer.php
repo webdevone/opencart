@@ -59,30 +59,6 @@ class ModelCatalogManufacturer extends Model {
 
 	
 	// Pez globo
-	public function getManufacturerOverloadFacebookUrl($manufacturer_id) {
-		return $this->getManufacturerOverload($manufacturer_id)['facebook_url'];
-	}
-
-	public function getManufacturerOverloadInstagramUrl($manufacturer_id) {
-		return $this->getManufacturerOverload($manufacturer_id)['instagram_url'];
-	}
-
-	public function getManufacturerOverloadTiktokUrl($manufacturer_id) {
-		return $this->getManufacturerOverload($manufacturer_id)['tiktok_url'];
-	}
-	
-	public function getManufacturerOverloadWhatsappUrl($manufacturer_id) {
-		return $this->getManufacturerOverload($manufacturer_id)['whatsapp_url'];
-	}
-
-	public function getManufacturerOverloadStoreUrl($manufacturer_id) {
-		return $this->getManufacturerOverload($manufacturer_id)['store_url'];
-	}
-
-	public function getManufacturerOverloadPhoneNumber($manufacturer_id) {
-		return $this->getManufacturerOverload($manufacturer_id)['phone_number'];
-	}
-	
 	private function getManufacturerOverload ($manufacturer_id) {
 		if (empty($manufacturer_id)) {
 			return;
@@ -95,7 +71,8 @@ class ModelCatalogManufacturer extends Model {
 				'tiktok_url' => '',
 				'whatsapp_url' => '',
 				'store_url' => '',
-				'phone_number' => ''
+				'phone_number' => '',
+				'feed_url' => ''
 			];
 		}
 
@@ -104,12 +81,7 @@ class ModelCatalogManufacturer extends Model {
 
 	public function getManufacturerOverloadFeedUrl($manufacturer_id)
 	{
-		$url = $this->getManufacturerOverloadStoreUrl($manufacturer_id);
-		if (empty($url)) {
-			return;
-		}
-
-		return $url . 'index.php?route=extension/feed/google_base';
+		return $this->getManufacturerOverload($manufacturer_id)['feed_url'];
 	}
 	
 	// end Pez globo
