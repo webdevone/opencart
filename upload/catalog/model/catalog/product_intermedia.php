@@ -2,51 +2,36 @@
 class ModelCatalogProductIntermedia extends Model {
 
 	public function getProduct($product_id) {
-		$query = $this->db->query("SELECT DISTINCT *, pd.name AS name, p.image, m.name AS manufacturer, (SELECT points FROM " . DB_PREFIX . "product_reward pr WHERE pr.product_id = p.product_id AND pr.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AS reward, (SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, (SELECT lcd.unit FROM " . DB_PREFIX . "length_class_description lcd WHERE p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r2 WHERE r2.product_id = p.product_id AND r2.status = '1' GROUP BY r2.product_id) AS reviews, p.sort_order FROM " . DB_PREFIX . "product_intermedia p LEFT JOIN " . DB_PREFIX . "product_description_intermedia pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store_intermedia p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
+		$query = $this->db->query("SELECT DISTINCT *, pd.name AS name, p.image, m.name AS manufacturer, pd.description FROM " . DB_PREFIX . "product_intermedia p LEFT JOIN " . DB_PREFIX . "product_description_intermedia pd ON (p.product_id = pd.product_id) " . " LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		if ($query->num_rows) {
 			return array(
 				'product_id'       => $query->row['product_id'],
 				'name'             => $query->row['name'],
-				'description'      => $query->row['description'],
-				'meta_title'       => $query->row['meta_title'],
-				'meta_description' => $query->row['meta_description'],
-				'meta_keyword'     => $query->row['meta_keyword'],
-				'tag'              => $query->row['tag'],
+				'product_description' => [
+					2 => [
+						'name' => $query->row['name'],
+						'description' => $query->row['description'],
+						'meta_title' => null,
+						'meta_description' => null,
+						'meta_keyword' => null,
+						'tag'              => $query->row['tag'],
+					]
+				],
 				'model'            => $query->row['model'],
-				'sku'              => $query->row['sku'],
-				'upc'              => $query->row['upc'],
-				'ean'              => $query->row['ean'],
-				'jan'              => $query->row['jan'],
-				'isbn'             => $query->row['isbn'],
-				'mpn'              => $query->row['mpn'],
-				'location'         => $query->row['location'],
 				'quantity'         => $query->row['quantity'],
-				'stock_status'     => $query->row['stock_status'],
 				'image'            => $query->row['image'],
 				'manufacturer_id'  => $query->row['manufacturer_id'],
 				'manufacturer'     => $query->row['manufacturer'],
-				'price'            => ($query->row['discount'] ? $query->row['discount'] : $query->row['price']),
-				'special'          => $query->row['special'],
-				'reward'           => $query->row['reward'],
-				'points'           => $query->row['points'],
-				'tax_class_id'     => $query->row['tax_class_id'],
-				'date_available'   => $query->row['date_available'],
+				'price'            => $query->row['price'],
 				'weight'           => $query->row['weight'],
-				'weight_class_id'  => $query->row['weight_class_id'],
 				'length'           => $query->row['length'],
 				'width'            => $query->row['width'],
 				'height'           => $query->row['height'],
-				'length_class_id'  => $query->row['length_class_id'],
-				'subtract'         => $query->row['subtract'],
-				'rating'           => round(($query->row['rating']===null) ? 0 : $query->row['rating']),
-				'reviews'          => $query->row['reviews'] ? $query->row['reviews'] : 0,
-				'minimum'          => $query->row['minimum'],
-				'sort_order'       => $query->row['sort_order'],
 				'status'           => $query->row['status'],
 				'date_added'       => $query->row['date_added'],
 				'date_modified'    => $query->row['date_modified'],
-				'viewed'           => $query->row['viewed']
+				
 			);
 		} else {
 			return false;
@@ -54,14 +39,16 @@ class ModelCatalogProductIntermedia extends Model {
 	}
 
 	public function getProducts($data = array()) {
-		$sql = "SELECT p.product_id";
+		$sql = "SELECT 
+				p.product_id, p.quantity, p.manufacturer_id, p.price, p.weight, p.height, p.length, p.width, p.image, p.model,
+				pd.description as product_description, pd.tag ";
 		
 		if (!empty($data['filter_category_id'])) {
 		} else {
-			$sql .= " FROM " . DB_PREFIX . "product p";
+			$sql .= " FROM " . DB_PREFIX . "product_intermedia p";
 		}
 
-		$sql .= " LEFT JOIN " . DB_PREFIX . "product_description_intermedia pd ON (p.product_id = pd.product_id)";
+		$sql .= " LEFT JOIN " . DB_PREFIX . "product_description_intermedia pd ON (p.product_id = pd.product_id AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "')";
 
 		if (!empty($data['filter_name']) || !empty($data['filter_tag'])) {
 			$sql .= " AND (";
@@ -120,14 +107,11 @@ class ModelCatalogProductIntermedia extends Model {
 		}
 
 		$sql .= " GROUP BY p.product_id";
-
 		$sort_data = array(
 			'pd.name',
 			'p.model',
 			'p.quantity',
 			'p.price',
-			'rating',
-			'p.sort_order',
 			'p.date_added'
 		);
 
@@ -162,7 +146,6 @@ class ModelCatalogProductIntermedia extends Model {
 		}
 
 		$product_data = array();
-		echo $sql;
 		$query = $this->db->query($sql);
 
 		foreach ($query->rows as $result) {
@@ -241,7 +224,8 @@ class ModelCatalogProductIntermedia extends Model {
 	// Pez Globo
 	public function addProduct($data) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "product_intermedia SET model = '" . $this->db->escape($data['model']) . "', quantity = '" . (int)$data['quantity'] . "', availability = '" . $data['availability'] . "', manufacturer_id = '" . (int)$data['manufacturer_id'] . "', price = '" . (float)$data['price'] . "', weight = '" . (float)$data['weight'] . "', store_id = '" . $data['store_id'] . "', link = '" . 
-		$data['link'] . "', date_added = NOW(), date_modified = NOW()");
+		$data['link'] . "', status = '" . 
+		$data['status'] . "', date_added = NOW(), date_modified = NOW()");
 
 		$product_id = $this->db->getLastId();
 

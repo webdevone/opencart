@@ -5,10 +5,9 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'services' . DIRECTORY_SEPARATOR . 
 
 class ControllerPezgloboFeedAggregator extends Controller {
 	public function index() {
-		// $this->load->language('product/manufacturer');
 		$manufacturer_process_status = $this->getManufacturerProcessStatus();
 		if (empty($manufacturer_process_status)) {
-			$this->response->setOutput('there is no manufacturer in queue');
+			$this->response->setOutput('there is no manufacturer feed in queue');
 			return;
 		}
 		$this->load->model('catalog/manufacturer');
@@ -16,8 +15,6 @@ class ControllerPezgloboFeedAggregator extends Controller {
 			$manufacturer_process_status['manufacturer_id']
 		);
 		
-		$feedUrl = $this->model_catalog_manufacturer->getManufacturerOverloadFeedUrl($manufacturer_process_status['manufacturer_id']);
-		echo $feedUrl . "<br>";
 		$feedIterator = new PezGloboXMLFeedService($feedUrl, $manufacturer_process_status['manufacturer_id'], $this->registry);
 		$products = $feedIterator->batch();
 		// echo "<pre>";
@@ -25,7 +22,6 @@ class ControllerPezgloboFeedAggregator extends Controller {
 		// echo "</pre>";
 		
 		if (empty($products)) {
-			$this->load->model('catalog/manufacturer_process_status');
 			$this->model_catalog_manufacturer_process_status->editManufacturerProcessStatusByManufacturerId(
 				$manufacturer_process_status['manufacturer_id'],
 				PezGloboProcessStatus::FINISHED
@@ -36,10 +32,10 @@ class ControllerPezgloboFeedAggregator extends Controller {
 		
 		$this->load->model('catalog/product_intermedia');
 		foreach ($products as $product) {
-			PezGloboProductIntermediaService::save($this->model_catalog_product_intermedia, $product);
+			$product_intermedia_service = new PezGloboProductIntermediaService($this->registry);
+			$product_intermedia_service->save($product);
 		}
 
-		// $this->response->setOutput($this->load->view('product/manufacturer_list', $data));
 		$this->response->setOutput('Done!');
 	}
 
