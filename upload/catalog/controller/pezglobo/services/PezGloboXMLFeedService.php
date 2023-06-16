@@ -12,6 +12,8 @@ final class PezGloboXMLFeedService extends Model {
     private $logFile;
     private $manufacturer_id;
 
+    private $status = 1;
+
     public function __construct($feedUrl, $manufacturer_id, $registry)
     {
         $this->registry = $registry;
@@ -88,6 +90,7 @@ final class PezGloboXMLFeedService extends Model {
                 ],
                 'store_id' => $this->store_id,
                 'availability' => $availability,
+                'status' => $this->status
             ];
         }
         
