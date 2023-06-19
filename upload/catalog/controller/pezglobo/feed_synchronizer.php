@@ -23,6 +23,10 @@ final class ControllerPezgloboFeedSynchronizer extends Controller {
         echo '</pre>';
         
         if (empty($products_intermedia)) {
+            $this->model_catalog_manufacturer_process_status->editManufacturerProcessStatusByManufacturerId(
+                $manufacturer_process_status['manufacturer_id'],
+                PezGloboProcessStatus::SYNCHRONIZER_FINISHED
+            );
             $this->response->setOutput('there is no products to sync');
             return;
         }
