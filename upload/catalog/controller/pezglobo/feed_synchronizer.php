@@ -15,7 +15,7 @@ final class ControllerPezgloboFeedSynchronizer extends Controller {
             return;
         }
         $proudct_intermedia_service = new PezGloboProductIntermediaService($this->registry);
-         $products_intermedia        = $proudct_intermedia_service->getProducts(
+        $products_intermedia        = $proudct_intermedia_service->getProducts(
             $manufacturer_process_status['manufacturer_id']
         );
         echo 'aqqqqa <pre>';
