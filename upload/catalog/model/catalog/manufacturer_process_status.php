@@ -9,4 +9,10 @@ class ModelCatalogManufacturerProcessStatus extends Model {
     
         return $query->row;
     }
+
+    public function getOldestManufacturerProcessStatusByStatus($status) {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "manufacturer_process_status WHERE status = '" . (int)$status . "' ORDER BY update_at ASC LIMIT 1");
+    
+        return $query->row;
+    }
 }
