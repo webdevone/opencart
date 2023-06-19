@@ -27,16 +27,15 @@ final class ControllerPezgloboFeedSynchronizer extends Controller {
             return;
         }
 
-        $this->load->model('catalog/product');
-        foreach ($products_intermedia as $proudct_intermedia) {
+        foreach ($products_intermedia as $product_intermedia_data) {
             $pezglobo_product_service = new PezGloboProductService($this->registry);
-            $pezglobo_product_service->save($proudct_intermedia);
-            // $this->model_catalog_product_intermedia->editProduct(
-            //     $proudct_intermedia['product_id'],
-            //     [
-            //         'status' => 2
-            //     ]
-            // );
+            $pezglobo_product_service->save($product_intermedia_data);
+            $product_intermedia = $this->model_catalog_product_intermedia->getProduct($product_intermedia_data['product_id']);
+            $product_intermedia['status'] = 2;
+            $this->model_catalog_product_intermedia->editProduct(
+                $product_intermedia_data['product_id'],
+                $product_intermedia
+            );
         }
         
         $this->response->setOutput('Done!');
