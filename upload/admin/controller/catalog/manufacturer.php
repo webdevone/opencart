@@ -396,9 +396,17 @@ class ControllerCatalogManufacturer extends Controller {
 	// Pez globo
 
 	private function getManufacturerOverloadForm($data) {
+		if (!isset($this->request->get['manufacturer_id'])) {
+			return $data;
+		}
+		$manufacturer_overload = $this->model_catalog_manufacturer->getManufacturerOverload($this->request->get['manufacturer_id']);
+		if (empty($manufacturer_overload)) {
+			return $data;
+		}
+
 		return array_merge(
-			$data, 
-			$this->model_catalog_manufacturer->getManufacturerOverload($this->request->get['manufacturer_id'])
+			$data,
+			$manufacturer_overload
 		);
 	}
 
