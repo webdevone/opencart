@@ -11,6 +11,7 @@ final class ControllerPezgloboFeedSynchronizer extends Controller {
 		$this->load->model('catalog/manufacturer_process_status');
         $manufacturer_process_status = $this->getManufacturerProcessStatus();
         if (empty($manufacturer_process_status)) {
+            $this->response->setOutput('feed agregator is running');
             return;
         }
         $proudct_intermedia_service = new PezGloboProductIntermediaService($this->registry);
@@ -22,6 +23,7 @@ final class ControllerPezgloboFeedSynchronizer extends Controller {
         echo '</pre>';
         
         if (empty($products_intermedia)) {
+            $this->response->setOutput('there is no products to sync');
             return;
         }
 
@@ -36,6 +38,8 @@ final class ControllerPezgloboFeedSynchronizer extends Controller {
             //     ]
             // );
         }
+        
+        $this->response->setOutput('Done!');
     }
 
     private function getManufacturerProcessStatus() {
