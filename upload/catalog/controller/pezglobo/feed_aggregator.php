@@ -24,7 +24,7 @@ class ControllerPezgloboFeedAggregator extends Controller {
 		if (empty($products)) {
 			$this->model_catalog_manufacturer_process_status->editManufacturerProcessStatusByManufacturerId(
 				$manufacturer_process_status['manufacturer_id'],
-				PezGloboProcessStatus::FINISHED
+				PezGloboProcessStatus::AGGREGATOR_FINISHED
 			);
 			$this->response->setOutput('there is no products');
 			return;
