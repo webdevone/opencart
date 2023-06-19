@@ -45,13 +45,13 @@ final class PezGloboXMLFeedService extends Model {
 
         if (empty($lote)) {
             PezGloboLog::delete($this->logFile);
-            $this->model_catalog_manufacturer_process_status->editManufacturerProcessStatusByManufacturerId($this->manufacturer_id, PezGloboProcessStatus::FINISHED);
+            $this->model_catalog_manufacturer_process_status->editManufacturerProcessStatusByManufacturerId($this->manufacturer_id, PezGloboProcessStatus::AGGREGATOR_FINISHED);
             $log = new Log('pezglobo.log');
             $log->write('Proceso finalizado de feed xml manu id : '. $this->manufacturer_id);
             return [];
         }
         
-        $this->model_catalog_manufacturer_process_status->editManufacturerProcessStatusByManufacturerId($this->manufacturer_id, PezGloboProcessStatus::IN_PROGRESS);
+        $this->model_catalog_manufacturer_process_status->editManufacturerProcessStatusByManufacturerId($this->manufacturer_id, PezGloboProcessStatus::AGGREGATOR_IN_PROGRESS);
 
         return $this->processBatch($lote, $namespace);
     }
