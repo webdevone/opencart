@@ -8,12 +8,15 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'domain' . DIRECTORY_SEPARATOR .'Pe
 final class ControllerPezgloboFeedSynchronizer extends Controller {
     public function index() {
         $this->load->model('catalog/product_intermedia');
+		$this->load->model('catalog/manufacturer_process_status');
         $manufacturer_process_status = $this->getManufacturerProcessStatus();
         if (empty($manufacturer_process_status)) {
             return;
         }
         $proudct_intermedia_service = new PezGloboProductIntermediaService($this->registry);
-        $products_intermedia = $proudct_intermedia_service->getProducts($manufacturer_process_status['manufacturer_id']);
+         $products_intermedia        = $proudct_intermedia_service->getProducts(
+            $manufacturer_process_status['manufacturer_id']
+        );
         echo 'aqqqqa <pre>';
         var_dump($products_intermedia);
         echo '</pre>';
