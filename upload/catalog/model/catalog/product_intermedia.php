@@ -257,8 +257,7 @@ class ModelCatalogProductIntermedia extends Model {
 		return $query->row['product_id'];
 	}
 	public function editProduct($product_id, $data) {
-		$this->db->query("UPDATE " . DB_PREFIX . "product_intermedia SET model = '" . $this->db->escape($data['model']) . "', quantity = '" . (int)$data['quantity'] . "', availability = '" . $data['availability'] . "', manufacturer_id = '" . (int)$data['manufacturer_id'] . "', price = '" . (float)$data['price'] . "', weight = '" . (float)$data['weight'] . "', store_id = '" . $data['store_id'] . "', link = '" . 
-		$data['link'] . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("UPDATE " . DB_PREFIX . "product_intermedia SET model = '" . $this->db->escape($data['model']) . "', quantity = '" . (int)$data['quantity'] . "', availability = '" . $data['availability'] . "', manufacturer_id = '" . (int)$data['manufacturer_id'] . "', price = '" . (float)$data['price'] . "', weight = '" . (float)$data['weight'] . "', store_id = '" . $data['store_id'] . "', link = '" . $data['link'] . "', status = '" . $this->db->escape($data['status']) . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
 		
 		if (isset($data['image'])) {
 			$this->db->query("UPDATE " . DB_PREFIX . "product_intermedia SET image = '" . $this->db->escape($data['image']) . "' WHERE product_id = '" . (int)$product_id . "'");
