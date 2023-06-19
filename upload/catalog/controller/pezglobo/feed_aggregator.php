@@ -41,10 +41,13 @@ class ControllerPezgloboFeedAggregator extends Controller {
 
 	private function getManufacturerProcessStatus() {
 		$this->load->model('catalog/manufacturer_process_status');
-		$manufacturer_process_status = $this->model_catalog_manufacturer_process_status->getManufacturerProcessStatusByStatus(PezGloboProcessStatus::IN_PROGRESS);
+		$manufacturer_process_status = $this->model_catalog_manufacturer_process_status->getManufacturerProcessStatusByStatus(PezGloboProcessStatus::AGGREGATOR_IN_PROGRESS);
 
 		if (empty($manufacturer_process_status)) {
-			return $this->model_catalog_manufacturer_process_status->getManufacturerProcessStatusByStatus(PezGloboProcessStatus::IN_QUEUE);
+			$manufacturer_process_status = $this->model_catalog_manufacturer_process_status->getManufacturerProcessStatusByStatus(PezGloboProcessStatus::AGGREGATOR_IN_QUEUE);
+		}
+		if (empty($manufacturer_process_status)) {
+			$manufacturer_process_status = $this->model_catalog_manufacturer_process_status->getOldestManufacturerProcessStatusByStatus(PezGloboProcessStatus::SYNCHRONIZER_FINISHED);
 		}
 
 		return $manufacturer_process_status;
