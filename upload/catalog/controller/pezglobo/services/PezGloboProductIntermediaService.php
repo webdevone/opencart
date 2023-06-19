@@ -47,7 +47,8 @@ class PezGloboProductIntermediaService extends Model
             if (!$product) {
                 continue;
             }
-            $arr[] = $this->setImages($product);
+            $product_intermedia = $this->getProductWithImages($product);
+            $arr[] = $product_intermedia;
         }
 
         return $arr;
@@ -63,7 +64,7 @@ class PezGloboProductIntermediaService extends Model
         return [];
     }
 
-    private function setImages($product) {
+    private function getProductWithImages($product) {
         $images = $this->getFormatedProductImages($product);
         if (empty($images)) {
             return;
