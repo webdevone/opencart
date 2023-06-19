@@ -34,7 +34,7 @@ class PezGloboProductIntermediaService extends Model
                 'filter_manufacturer_id' => $manufacturer_id,
                 'start' => 1,
                 'limit' => 10,
-                'status' => 1
+                'filter_status' => 1
             ]
         );
 

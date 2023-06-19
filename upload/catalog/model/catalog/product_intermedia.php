@@ -48,7 +48,7 @@ class ModelCatalogProductIntermedia extends Model {
 			$sql .= " FROM " . DB_PREFIX . "product_intermedia p";
 		}
 
-		$sql .= " LEFT JOIN " . DB_PREFIX . "product_description_intermedia pd ON (p.product_id = pd.product_id AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "')";
+		$sql .= " LEFT JOIN " . DB_PREFIX . "product_description_intermedia pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_name']) || !empty($data['filter_tag'])) {
 			$sql .= " AND (";
@@ -104,6 +104,10 @@ class ModelCatalogProductIntermedia extends Model {
 
 		if (!empty($data['filter_manufacturer_id'])) {
 			$sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
+		}
+
+		if (isset($data['filter_status']) && $data['filter_status'] !== '') {
+			$sql .= " AND p.status = '" . (int)$data['filter_status'] . "'";
 		}
 
 		$sql .= " GROUP BY p.product_id";
