@@ -148,12 +148,11 @@ class ModelCatalogProductIntermedia extends Model {
 				$data['limit'] = 20;
 			}
 
-			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+			$sql .= " LIMIT " . (int)$data['limit'];
 		}
 
 		$product_data = array();
 		$query = $this->db->query($sql);
-
 		foreach ($query->rows as $result) {
 			$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
 		}
