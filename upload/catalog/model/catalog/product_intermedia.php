@@ -31,7 +31,9 @@ class ModelCatalogProductIntermedia extends Model {
 				'status'           => $query->row['status'],
 				'date_added'       => $query->row['date_added'],
 				'date_modified'    => $query->row['date_modified'],
-				
+				'availability'    => $query->row['availability'],
+				'store_id'    => $query->row['store_id'],
+				'link'    => $query->row['link'],
 			);
 		} else {
 			return false;
