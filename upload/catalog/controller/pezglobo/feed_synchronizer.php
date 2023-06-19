@@ -43,6 +43,8 @@ final class ControllerPezgloboFeedSynchronizer extends Controller {
 
     private function getManufacturerProcessStatus() {
 		$this->load->model('catalog/manufacturer_process_status');
-		return $this->model_catalog_manufacturer_process_status->getManufacturerProcessStatusByStatus(PezGloboProcessStatus::FINISHED);
+		return $this
+                    ->model_catalog_manufacturer_process_status
+                    ->getOldestManufacturerProcessStatusByStatus(PezGloboProcessStatus::AGGREGATOR_FINISHED);
 	}
 }
